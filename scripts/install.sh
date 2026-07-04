@@ -67,6 +67,30 @@ fetch_url() {
     fi
 }
 
+# 交互输入：wget | bash 管道执行时 stdin 非终端，需从 /dev/tty 读取
+read_prompt() {
+    local var=$1 prompt=$2 secret=${3:-0} input=""
+    if [[ -t 0 ]]; then
+        if [[ "$secret" == "1" ]]; then
+            read -rsp "$prompt" input
+            echo ""
+        else
+            read -rp "$prompt" input
+        fi
+    elif [[ -r /dev/tty ]]; then
+        if [[ "$secret" == "1" ]]; then
+            read -rsp "$prompt" input < /dev/tty
+            echo "" > /dev/tty
+        else
+            read -rp "$prompt" input < /dev/tty
+        fi
+    else
+        warn "无法交互输入，请使用命令行参数，或先 wget 下载脚本再 bash install.sh"
+        return 1
+    fi
+    printf -v "$var" '%s' "$input"
+}
+
 release_urls() {
     local arch=$1
     if [[ -n "${ZPANEL_BASE_URL:-}" ]]; then
@@ -179,16 +203,15 @@ prompt_config() {
     if [[ "${INTERACTIVE:-0}" == "1" ]] || [[ -t 0 && $FLAG_PORT -eq 0 && $FLAG_USER -eq 0 && $FLAG_PASS -eq 0 ]]; then
         echo ""
         echo "========== 自定义面板配置（直接回车使用默认值）=========="
-        read -rp "面板端口 [${PORT}]: " input
+        read_prompt input "面板端口 [${PORT}]: " || return 0
         [[ -n "$input" ]] && PORT="$input"
-        read -rp "管理员用户名 [${USERNAME}]: " input
+        read_prompt input "管理员用户名 [${USERNAME}]: " || return 0
         [[ -n "$input" ]] && USERNAME="$input"
         if [[ -z "$PASSWORD" ]]; then
-            read -rsp "管理员密码（留空自动生成）: " input
-            echo ""
+            read_prompt input "管理员密码（留空自动生成）: " 1 || return 0
             [[ -n "$input" ]] && PASSWORD="$input"
         fi
-        read -rp "安全入口后缀（如 mypanel，留空不启用）: " input
+        read_prompt input "安全入口后缀（如 mypanel，留空不启用）: " || return 0
         [[ -n "$input" ]] && ENTRY="$input"
         echo "======================================================"
         echo ""
