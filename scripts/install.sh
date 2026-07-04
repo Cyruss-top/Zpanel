@@ -69,26 +69,26 @@ fetch_url() {
 
 # 交互输入：wget | bash 管道执行时 stdin 非终端，需从 /dev/tty 读取
 read_prompt() {
-    local var=$1 prompt=$2 secret=${3:-0} input=""
+    local var=$1 prompt=$2 secret=${3:-0} value=""
     if [[ -t 0 ]]; then
         if [[ "$secret" == "1" ]]; then
-            read -rsp "$prompt" input
+            read -rsp "$prompt" value
             echo ""
         else
-            read -rp "$prompt" input
+            read -rp "$prompt" value
         fi
     elif [[ -r /dev/tty ]]; then
         if [[ "$secret" == "1" ]]; then
-            read -rsp "$prompt" input < /dev/tty
+            read -rsp "$prompt" value < /dev/tty
             echo "" > /dev/tty
         else
-            read -rp "$prompt" input < /dev/tty
+            read -rp "$prompt" value < /dev/tty
         fi
     else
         warn "无法交互输入，请使用命令行参数，或先 wget 下载脚本再 bash install.sh"
         return 1
     fi
-    printf -v "$var" '%s' "$input"
+    printf -v "$var" '%s' "$value"
 }
 
 release_urls() {
@@ -201,6 +201,7 @@ prompt_config() {
     [[ -n "$ENTRY" ]] && FLAG_ENTRY=1
 
     if [[ "${INTERACTIVE:-0}" == "1" ]] || [[ -t 0 && $FLAG_PORT -eq 0 && $FLAG_USER -eq 0 && $FLAG_PASS -eq 0 ]]; then
+        local input=""
         echo ""
         echo "========== 自定义面板配置（直接回车使用默认值）=========="
         read_prompt input "面板端口 [${PORT}]: " || return 0
