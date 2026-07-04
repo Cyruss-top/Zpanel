@@ -277,14 +277,34 @@ chore: release v0.2.0
 | 2 | `cmd/zpanel/main.go` server/cli 入口 | 完成 |
 | 3 | Gin HTTP + `/api/v1/health` | 完成 |
 | 4 | config 读取 `configs/config.example.yaml` | 完成 |
-| 5 | SQLite 初始化 + 用户表 | **下一步** |
-| 6 | JWT auth login API | 待开始 |
-| 7 | monitor overview API | 待开始 |
+| 5 | SQLite 初始化 + 用户表 | 完成 |
+| 6 | JWT auth login API | 完成 |
+| 7 | monitor overview API | 完成 |
+
+**v0.2.0 已达成。** 下一步进入 **v0.3.0**：Vue 前端骨架 + 登录 + 概览页。
+
+| # | 任务 | 状态 |
+|---|------|------|
+| 1 | Vite + Vue 3 + TS 初始化 | **下一步** |
+| 2 | Naive UI + 主题 + 布局 | 待开始 |
+| 3 | 登录页 + 路由守卫 | 待开始 |
+| 4 | 概览页对接 monitor API | 待开始 |
 
 **启动命令（开发环境）：**
 ```bash
 cp configs/config.example.yaml configs/config.yaml
 go run ./cmd/zpanel server
+# 默认账号 admin / admin（首次启动日志会提示）
+```
+
+**API 测试：**
+```bash
+curl -X POST http://127.0.0.1:8888/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin"}'
+
+curl http://127.0.0.1:8888/api/v1/monitor/overview \
+  -H "Authorization: Bearer <token>"
 ```
 
 ---
