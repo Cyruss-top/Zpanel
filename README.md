@@ -19,9 +19,8 @@
 # 交互式安装（可自定义端口、账号、密码、安全入口）
 curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
 
-# 命令行参数安装
-curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
-  --port 8888 --username admin --password 'yourpass' --entry mypanel
+# 没有 curl 时用 wget
+wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
 ```
 
 详细教程：[docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md)

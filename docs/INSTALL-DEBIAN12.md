@@ -40,13 +40,27 @@ ufw reload
 
 ## 三、一键安装
 
+> **没有 curl？** 先执行 `apt update && apt install -y curl wget`，或直接用下面的 **wget** 命令。
+
 ### 方式 A：交互式安装（推荐）
 
 安装过程中可自定义 **端口、用户名、密码、安全入口后缀**：
 
 ```bash
+# 使用 curl
 curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh -o install.sh
 bash install.sh --interactive
+```
+
+```bash
+# 没有 curl 时用 wget（Debian 最小化镜像常见）
+wget -qO install.sh https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh
+bash install.sh --interactive
+```
+
+```bash
+# 一行命令（wget 管道）
+wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
 ```
 
 按提示输入：
@@ -67,7 +81,17 @@ http://你的服务器IP:8888/mypanel/
 ### 方式 B：命令行参数安装
 
 ```bash
+# 使用 curl
 curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
+  --port 9999 \
+  --username myadmin \
+  --password 'StrongPass123' \
+  --entry mypanel
+```
+
+```bash
+# 没有 curl 时用 wget
+wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
   --port 9999 \
   --username myadmin \
   --password 'StrongPass123' \
@@ -226,6 +250,18 @@ bash scripts/uninstall.sh
 ---
 
 ## 十、常见问题
+
+### 0. curl: command not found
+
+Debian 最小化镜像可能未预装 curl，任选其一：
+
+```bash
+# 安装 curl（推荐）
+apt update && apt install -y curl wget ca-certificates
+
+# 或直接用 wget 安装面板
+wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+```
 
 ### 1. 无法访问面板
 
