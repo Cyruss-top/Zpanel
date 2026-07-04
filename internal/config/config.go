@@ -95,6 +95,12 @@ func (c *Config) applyDefaults() {
 	if c.Paths.Logs == "" {
 		c.Paths.Logs = "./data/logs"
 	}
+	if c.Paths.NginxSites == "" {
+		c.Paths.NginxSites = "./data/nginx/sites-available"
+	}
+	if c.Paths.NginxEnabled == "" {
+		c.Paths.NginxEnabled = "./data/nginx/sites-enabled"
+	}
 	if c.Database.SQLite == "" {
 		c.Database.SQLite = "zpanel.db"
 	}
@@ -105,7 +111,10 @@ func (c *Config) applyDefaults() {
 
 // EnsureDirs 创建运行所需目录
 func (c *Config) EnsureDirs() error {
-	dirs := []string{c.Paths.WWW, c.Paths.Data, c.Paths.Logs}
+	dirs := []string{
+		c.Paths.WWW, c.Paths.Data, c.Paths.Logs,
+		c.Paths.NginxSites, c.Paths.NginxEnabled,
+	}
 	for _, dir := range dirs {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return fmt.Errorf("mkdir %s: %w", dir, err)

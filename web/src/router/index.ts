@@ -16,8 +16,9 @@ const router = createRouter({
       component: () => import('@/components/layout/AppLayout.vue'),
       children: [
         { path: '', name: 'dashboard', component: () => import('@/views/Dashboard.vue') },
-        { path: 'sites', name: 'sites', component: () => import('@/views/Placeholder.vue'), props: { title: '网站管理' } },
-        { path: 'environment', name: 'environment', component: () => import('@/views/Placeholder.vue'), props: { title: '环境管理' } },
+        { path: 'sites', name: 'sites', component: () => import('@/views/Sites/List.vue') },
+        { path: 'sites/create', name: 'sites-create', component: () => import('@/views/Sites/Create.vue') },
+        { path: 'environment', name: 'environment', component: () => import('@/views/Environment.vue') },
         { path: 'database', name: 'database', component: () => import('@/views/Placeholder.vue'), props: { title: '数据库' } },
         { path: 'files', name: 'files', component: () => import('@/views/Placeholder.vue'), props: { title: '文件管理' } },
         { path: 'cron', name: 'cron', component: () => import('@/views/Placeholder.vue'), props: { title: '计划任务' } },

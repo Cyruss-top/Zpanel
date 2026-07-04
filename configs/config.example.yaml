@@ -14,8 +14,9 @@ paths:
   www: "./data/www"
   data: "./data/lib"
   logs: "./data/logs"
-  nginx_sites: "/etc/nginx/sites-available"
-  nginx_enabled: "/etc/nginx/sites-enabled"
+  # 开发环境使用本地目录；生产环境改为 /etc/nginx/sites-available 与 sites-enabled
+  nginx_sites: "./data/nginx/sites-available"
+  nginx_enabled: "./data/nginx/sites-enabled"
 
 files:
   allowed_paths:

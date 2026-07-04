@@ -281,23 +281,25 @@ chore: release v0.2.0
 | 6 | JWT auth login API | 完成 |
 | 7 | monitor overview API | 完成 |
 
-**v0.3.0 已达成。** 可在浏览器登录面板。下一步 **v0.4.0**：LNMP 安装 + 站点管理。
+**v0.4.0 已达成。** LNMP + 站点管理可用（需 Linux）。下一步 **v0.5.0**：CLI + install.sh。
+
+### Phase C — LNMP 与站点（v0.4.0，已完成）
 
 | # | 任务 | 状态 |
 |---|------|------|
-| 1 | Vite + Vue 3 + TS 初始化 | 完成 |
-| 2 | Naive UI + 主题 + 布局 | 完成 |
-| 3 | 登录页 + 路由守卫 | 完成 |
-| 4 | 概览页对接 monitor API | 完成 |
+| 1 | `scripts/lnmp-install.sh` | 完成 |
+| 2 | LNMP 状态 / 安装 API | 完成 |
+| 3 | 站点 CRUD（HTML/PHP/Go） | 完成 |
+| 4 | 前端环境页 + 站点页 | 完成 |
 
-### Phase C — LNMP 与站点（v0.4.0，下一步）
+### Phase D — CLI 与部署（v0.5.0，下一步）
 
 | # | 任务 | 状态 |
 |---|------|------|
-| 1 | `scripts/lnmp-install.sh` | **下一步** |
-| 2 | LNMP 状态 / 安装 API | 待开始 |
-| 3 | 站点 CRUD（HTML/PHP/Go） | 待开始 |
-| 4 | 前端环境页 + 站点页 | 待开始 |
+| 1 | cobra CLI 框架 | **下一步** |
+| 2 | 交互式菜单 `zpanel` | 待开始 |
+| 3 | `scripts/install.sh` | 待开始 |
+| 4 | 交叉编译 amd64 + arm64 | 待开始 |
 
 **启动命令（开发环境）：**
 ```bash

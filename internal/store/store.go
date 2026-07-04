@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 	if _, err := s.db.Exec(schema); err != nil {
 		return fmt.Errorf("migrate: %w", err)
 	}
-	return nil
+	return s.migrateSites()
 }
 
 func (s *Store) Close() error {

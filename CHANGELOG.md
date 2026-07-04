@@ -5,6 +5,17 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-04
+
+### Added
+- `scripts/lnmp-install.sh` 一键安装 LNMP（Ubuntu/Debian/CentOS）
+- LNMP 状态检测与安装 API：`GET/POST /api/v1/lnmp/*`
+- 站点 CRUD API：HTML / PHP / Go 三类站点
+- Nginx 配置模板渲染、启用、reload（`nginx -t` 校验）
+- Go 站点 systemd unit 管理
+- 前端「环境管理」页 + 「网站」列表与创建页
+- 开发环境 Nginx 配置目录（`./data/nginx/`）
+
 ## [0.3.0] - 2026-07-04
 
 ### Added
@@ -41,7 +52,8 @@
 - 项目 README
 - 版本标记与 Git 备份规范
 
-[Unreleased]: https://github.com/your-org/zpanel/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/your-org/zpanel/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/your-org/zpanel/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/your-org/zpanel/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/your-org/zpanel/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/your-org/zpanel/releases/tag/v0.1.0
