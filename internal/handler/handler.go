@@ -59,8 +59,8 @@ func (h *Handler) Register(r *gin.Engine) {
 			c.Redirect(http.StatusFound, entry+"/")
 		})
 		h.mountPanel(r.Group(entry), entry)
-		return
+	} else {
+		h.mountPanel(r, "")
 	}
-
-	h.mountPanel(r, "")
+	h.registerStaticFallback(r, entry)
 }

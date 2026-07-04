@@ -26,7 +26,30 @@ func (h *Handler) mountPanel(parent gin.IRouter, entryPrefix string) {
 		serveSPA(c, staticRoot, entryPrefix)
 	}
 	parent.GET("/", serve)
-	parent.GET("/*filepath", serve)
+	parent.GET("/assets/*filepath", serve)
+}
+
+func (h *Handler) registerStaticFallback(engine *gin.Engine, entryPrefix string) {
+	staticRoot, err := fs.Sub(webembed.StaticFS, "dist")
+	if err != nil {
+		return
+	}
+	engine.NoRoute(func(c *gin.Context) {
+		path := c.Request.URL.Path
+		if strings.HasPrefix(path, "/api/") {
+			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
+			return
+		}
+		if entryPrefix != "" && !strings.HasPrefix(path, entryPrefix) {
+			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
+			return
+		}
+		if c.Request.Method != http.MethodGet {
+			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
+			return
+		}
+		serveSPA(c, staticRoot, entryPrefix)
+	})
 }
 
 func serveSPA(c *gin.Context, root fs.FS, entryPrefix string) {
@@ -69,7 +92,6 @@ func serveSPA(c *gin.Context, root fs.FS, entryPrefix string) {
 // rewriteIndexForEntry 安全入口下修正静态资源路径，避免 /assets 404 导致白屏
 func rewriteIndexForEntry(html, entryPrefix string) string {
 	base := entryPrefix + "/"
-	// 绝对路径 /assets/ → 相对 assets/（配合 base href）
 	html = strings.ReplaceAll(html, `src="/assets/`, `src="assets/`)
 	html = strings.ReplaceAll(html, `href="/assets/`, `href="assets/`)
 	html = strings.ReplaceAll(html, `src="./assets/`, `src="assets/`)
