@@ -27,6 +27,6 @@ release-arm64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o bin/zpanel-linux-arm64 ./cmd/zpanel
 
 release: build-all release-amd64 release-arm64
-	@cd bin && tar czf zpanel-linux-amd64.tar.gz zpanel-linux-amd64
-	@cd bin && tar czf zpanel-linux-arm64.tar.gz zpanel-linux-arm64
+	@cd bin && cp zpanel-linux-amd64 zpanel && tar czf zpanel-linux-amd64.tar.gz zpanel && rm -f zpanel
+	@cd bin && cp zpanel-linux-arm64 zpanel && tar czf zpanel-linux-arm64.tar.gz zpanel && rm -f zpanel
 	@echo "Release packages in bin/"

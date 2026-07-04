@@ -66,8 +66,14 @@ fetch_url() {
 
 release_urls() {
     local arch=$1
-    local gh="https://github.com/${GITHUB_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
-    local gt="https://gitee.com/${GITEE_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
+    local gh gt
+    if [[ "$ZPANEL_VERSION" == "latest" ]]; then
+        gh="https://github.com/${GITHUB_REPO}/releases/latest/download/zpanel-linux-${arch}.tar.gz"
+        gt="https://gitee.com/${GITEE_REPO}/releases/latest/download/zpanel-linux-${arch}.tar.gz"
+    else
+        gh="https://github.com/${GITHUB_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
+        gt="https://gitee.com/${GITEE_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
+    fi
     if [[ "$ZPANEL_MIRROR" == "gitee" ]]; then
         echo "$gt"
         echo "$gh"
@@ -113,7 +119,13 @@ install_binary() {
     done < <(release_urls "$ARCH")
 
     if [[ $downloaded -eq 1 ]]; then
-        install -m 755 "$TMP/zpanel" "$BIN_PATH"
+        if [[ -f "$TMP/zpanel" ]]; then
+            install -m 755 "$TMP/zpanel" "$BIN_PATH"
+        elif [[ -f "$TMP/zpanel-linux-${ARCH}" ]]; then
+            install -m 755 "$TMP/zpanel-linux-${ARCH}" "$BIN_PATH"
+        else
+            error "压缩包内未找到 zpanel 二进制"
+        fi
         rm -rf "$TMP"
         info "二进制已安装: $BIN_PATH"
         return
