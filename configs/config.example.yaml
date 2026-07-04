@@ -1,0 +1,27 @@
+# Zpanel 配置示例 — 复制为 config.yaml 用于本地开发
+# 生产环境路径: /etc/zpanel/config.yaml
+
+panel:
+  port: 8888
+  bind: "127.0.0.1"   # 开发默认仅本地；生产可改为 0.0.0.0
+  ssl: false
+
+auth:
+  username: admin
+  # password_hash 由首次启动或 zpanel user password 写入
+
+paths:
+  www: "./data/www"
+  data: "./data/lib"
+  logs: "./data/logs"
+  nginx_sites: "/etc/nginx/sites-available"
+  nginx_enabled: "/etc/nginx/sites-enabled"
+
+files:
+  allowed_paths:
+    - "./data/www"
+  max_upload_size: 52428800  # 50MB
+
+database:
+  # 面板自身 SQLite，相对 paths.data
+  sqlite: "zpanel.db"

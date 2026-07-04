@@ -6,11 +6,9 @@
 ## [Unreleased]
 
 ### Added
-- 项目初始化：开发文档、版本管理规范
-- UI 设计规范：Naive UI + 运维控制台风格
-- 功能规划：LNMP、PHP/HTML/Go 站点管理
-- CLI 设计：`zpanel` / `zp` 命令体系
-- 一键部署脚本设计
+- 开发计划 `docs/PLAN.md`（里程碑 v0.2.0 ~ v1.0.0）
+- Agent Skill `.cursor/skills/zpanel-dev/`
+- 本地开发配置示例 `configs/config.example.yaml`
 
 ---
 

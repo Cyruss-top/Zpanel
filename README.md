@@ -35,7 +35,10 @@ zpanel site list    # 站点列表
 
 ## 开发文档
 
-详见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — 完整技术规范
+- [docs/PLAN.md](docs/PLAN.md) — **开发计划与 Sprint 排期**
+
+Agent Skill：`.cursor/skills/zpanel-dev/`（Zpanel 开发时自动加载）
 
 ## 技术栈
 
