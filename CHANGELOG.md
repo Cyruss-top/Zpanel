@@ -5,6 +5,18 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-04
+
+### Added
+- 安装脚本 `--base-url` / `ZPANEL_BASE_URL`：从自建服务器一键安装
+- 安装脚本 `--package`：从本地 Release 包安装
+- Gitee 国内镜像与 `docs/GITEE-SYNC.md` 同步指南
+- GitHub Actions：Release 发布 + Gitee 代码同步
+
+### Changed
+- 安装脚本支持 wget、Gitee/GitHub 双镜像回退
+- 站点管理、LNMP 环境相关功能完善
+
 ## [0.6.0] - 2026-07-04
 
 ### Added

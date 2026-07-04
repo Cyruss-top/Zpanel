@@ -8,12 +8,14 @@
 #   bash scripts/install.sh --port 8888 --username admin --password 'yourpass' --entry mypanel
 #   bash scripts/install.sh --mirror gitee --interactive
 #   bash scripts/install.sh --package /root/zpanel-linux-amd64.tar.gz --interactive
-#   ZPANEL_PACKAGE=/root/zpanel-linux-amd64.tar.gz bash scripts/install.sh --interactive
+#   bash install.sh --base-url https://your-server.com/zpanel --interactive
+#   ZPANEL_BASE_URL=https://your-server.com/zpanel bash install.sh --interactive
 
 set -euo pipefail
 
 ZPANEL_VERSION="${ZPANEL_VERSION:-latest}"
 ZPANEL_MIRROR="${ZPANEL_MIRROR:-github}"   # github | gitee
+ZPANEL_BASE_URL="${ZPANEL_BASE_URL:-}"     # 自定义安装包地址，如 https://your-server.com/zpanel
 GITHUB_REPO="${GITHUB_REPO:-Cyruss-top/Zpanel}"
 GITEE_REPO="${GITEE_REPO:-Ressss2023/Zpanel}"
 INSTALL_DIR="/usr/local/zpanel"
@@ -67,6 +69,11 @@ fetch_url() {
 
 release_urls() {
     local arch=$1
+    if [[ -n "${ZPANEL_BASE_URL:-}" ]]; then
+        local base="${ZPANEL_BASE_URL%/}"
+        echo "${base}/zpanel-linux-${arch}.tar.gz"
+        return
+    fi
     local gh gt
     if [[ "$ZPANEL_VERSION" == "latest" ]]; then
         gh="https://github.com/${GITHUB_REPO}/releases/latest/download/zpanel-linux-${arch}.tar.gz"
@@ -129,7 +136,7 @@ install_binary() {
         *) error "不支持的架构: $ARCH" ;;
     esac
 
-    info "下载 Zpanel ${ZPANEL_VERSION} (${ARCH})，镜像: ${ZPANEL_MIRROR}..."
+    info "下载 Zpanel ${ZPANEL_VERSION} (${ARCH})${ZPANEL_BASE_URL:+, 源: ${ZPANEL_BASE_URL}}..."
     TMP=$(mktemp -d)
     local downloaded=0 url
     while IFS= read -r url; do
@@ -294,6 +301,7 @@ main() {
             --entry)      ENTRY="$2"; shift 2 ;;
             --mirror)     ZPANEL_MIRROR="$2"; shift 2 ;;
             --package)    ZPANEL_PACKAGE="$2"; shift 2 ;;
+            --base-url)   ZPANEL_BASE_URL="$2"; shift 2 ;;
             --interactive|-i) INTERACTIVE=1; shift ;;
             *) shift ;;
         esac

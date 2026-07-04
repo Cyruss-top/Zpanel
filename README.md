@@ -37,7 +37,7 @@ curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/insta
 
 详细教程：[docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md)
 
-当前版本：**v0.6.0**（见 [VERSION](VERSION)）
+当前版本：**v0.7.0**（见 [VERSION](VERSION)）
 
 ## 本地开发安装
 

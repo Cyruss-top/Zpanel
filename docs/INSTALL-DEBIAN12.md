@@ -185,7 +185,17 @@ bash install.sh \
 ZPANEL_PACKAGE=/root/zpanel-linux-amd64.tar.gz bash install.sh --interactive
 ```
 
-> 安装包目录示例：`/root/zpanel-linux-amd64.tar.gz`，路径按你实际上传位置修改。
+### 方式 E：自建服务器 Release 源（推荐国内自建）
+
+将 Release 包和 `install.sh` 上传到同一 Web 目录，一键安装：
+
+```bash
+wget -qO- https://你的域名/zpanel-release/install.sh | bash -s -- \
+  --base-url https://你的域名/zpanel-release \
+  --interactive
+```
+
+> `--base-url` 指向包含 `zpanel-linux-amd64.tar.gz` 的目录，脚本会自动按架构下载对应包。
 
 ---
 
