@@ -329,6 +329,27 @@ setup_firewall() {
     fi
 }
 
+verify_service() {
+    local PORT=$1 ENTRY=${2:-}
+    local PATH_SUFFIX=""
+    [[ -n "$ENTRY" ]] && PATH_SUFFIX="/${ENTRY}/"
+    sleep 1
+    if ! systemctl is-active --quiet zpanel 2>/dev/null; then
+        warn "zpanel 服务未运行，请执行: journalctl -u zpanel -n 30"
+        return 1
+    fi
+    if ! ss -tlnp 2>/dev/null | grep -q ":${PORT} "; then
+        warn "端口 ${PORT} 未监听，请检查配置与服务日志"
+        return 1
+    fi
+    if curl -fsS --connect-timeout 3 "http://127.0.0.1:${PORT}${PATH_SUFFIX}" >/dev/null 2>&1; then
+        info "本地访问正常 (127.0.0.1:${PORT}${PATH_SUFFIX})"
+        return 0
+    fi
+    warn "本地访问失败，请执行: journalctl -u zpanel -n 30"
+    return 1
+}
+
 setup_symlink() {
     ln -sf "$BIN_PATH" /usr/bin/zp
 }
@@ -391,6 +412,9 @@ print_info() {
     echo -e "  密码:     ${PASSWORD}"
     [[ -n "$ENTRY" ]] && echo -e "  安全入口: /${ENTRY}/"
     echo -e "  管理命令: zpanel 或 zp"
+    echo "============================================"
+    echo -e "  ${YELLOW}外网无法访问? 请到云厂商控制台安全组放行 TCP ${PORT}${NC}"
+    echo -e "  ${YELLOW}服务器自检: systemctl status zpanel && ss -tlnp | grep ${PORT}${NC}"
     echo "============================================"
     echo -e "  ${YELLOW}请妥善保存以上信息${NC}"
     echo "============================================"
@@ -461,6 +485,7 @@ main() {
     PASSWORD=$(init_config "$PORT" "$USERNAME" "$PASSWORD" "$ENTRY")
     setup_service
     setup_firewall "$PORT"
+    verify_service "$PORT" "$ENTRY" || true
     print_info "$PORT" "$USERNAME" "$PASSWORD" "$ENTRY"
 }
 

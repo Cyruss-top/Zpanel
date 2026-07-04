@@ -376,21 +376,37 @@ wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash
 
 安装脚本会优先从 Gitee Releases 下载二进制，失败时自动回退 GitHub。
 
-### 2. 无法访问面板
+### 2. 外网「连接被拒绝」
+
+**最常见：云厂商安全组未放行面板端口**（如 14212），需在控制台单独添加，与服务器 ufw 无关。
+
+```bash
+systemctl status zpanel
+ss -tlnp | grep 14212
+curl -I http://127.0.0.1:14212/linux/    # 换成你的端口和入口
+journalctl -u zpanel -n 50 --no-pager
+```
+
+| 本机 curl | 外网 | 处理 |
+|-----------|------|------|
+| ✅ | ❌ 拒绝 | 云安全组添加入站 **TCP 14212** |
+| ❌ | ❌ | `systemctl restart zpanel` 并查日志 |
+
+### 3. 无法访问面板
 
 ```bash
 zpanel status          # 检查服务是否运行
-ss -tlnp | grep 8888   # 检查端口监听
+ss -tlnp | grep 14212  # 检查端口监听（换成你的端口）
 zpanel default         # 查看正确访问地址（含安全入口）
 ```
 
-### 3. 忘记密码
+### 4. 忘记密码
 
 ```bash
 zpanel user password 新密码
 ```
 
-### 4. 忘记安全入口后缀
+### 5. 忘记安全入口后缀
 
 ```bash
 grep entry /etc/zpanel/config.yaml
