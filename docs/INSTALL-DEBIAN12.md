@@ -151,6 +151,42 @@ make build-all
 ZPANEL_INSTALL_LOCAL=1 bash scripts/install.sh --interactive
 ```
 
+### 方式 D：本地 Release 包安装（离线/已下载）
+
+若已将 Release 包上传到服务器（如 `/root/`），无需联网下载二进制：
+
+```bash
+# 1. 确认架构并选择对应包
+uname -m
+# x86_64  → zpanel-linux-amd64.tar.gz
+# aarch64 → zpanel-linux-arm64.tar.gz
+
+# 2. 下载安装脚本（仅需脚本，约几 KB）
+wget -qO install.sh https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh
+
+# 3. 指定本地包路径安装
+bash install.sh --package /root/zpanel-linux-amd64.tar.gz --interactive
+```
+
+一行命令（参数版）：
+
+```bash
+bash install.sh \
+  --package /root/zpanel-linux-amd64.tar.gz \
+  --port 8888 \
+  --username admin \
+  --password 'yourpass' \
+  --entry mypanel
+```
+
+或用环境变量：
+
+```bash
+ZPANEL_PACKAGE=/root/zpanel-linux-amd64.tar.gz bash install.sh --interactive
+```
+
+> 安装包目录示例：`/root/zpanel-linux-amd64.tar.gz`，路径按你实际上传位置修改。
+
 ---
 
 ## 四、安装完成

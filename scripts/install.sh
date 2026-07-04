@@ -7,7 +7,8 @@
 #   wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --interactive
 #   bash scripts/install.sh --port 8888 --username admin --password 'yourpass' --entry mypanel
 #   bash scripts/install.sh --mirror gitee --interactive
-#   ZPANEL_INSTALL_LOCAL=1 bash scripts/install.sh --interactive
+#   bash scripts/install.sh --package /root/zpanel-linux-amd64.tar.gz --interactive
+#   ZPANEL_PACKAGE=/root/zpanel-linux-amd64.tar.gz bash scripts/install.sh --interactive
 
 set -euo pipefail
 
@@ -85,6 +86,29 @@ release_urls() {
 
 install_binary() {
     mkdir -p "$INSTALL_DIR/bin" "$INSTALL_DIR/scripts" "$INSTALL_DIR/templates"
+
+    if [[ -n "${ZPANEL_PACKAGE:-}" ]]; then
+        [[ -f "$ZPANEL_PACKAGE" ]] || error "安装包不存在: $ZPANEL_PACKAGE"
+        info "使用本地安装包: $ZPANEL_PACKAGE"
+        TMP=$(mktemp -d)
+        tar xzf "$ZPANEL_PACKAGE" -C "$TMP"
+        ARCH=$(uname -m)
+        case "$ARCH" in
+            x86_64)  ARCH="amd64" ;;
+            aarch64) ARCH="arm64" ;;
+        esac
+        if [[ -f "$TMP/zpanel" ]]; then
+            install -m 755 "$TMP/zpanel" "$BIN_PATH"
+        elif [[ -f "$TMP/zpanel-linux-${ARCH}" ]]; then
+            install -m 755 "$TMP/zpanel-linux-${ARCH}" "$BIN_PATH"
+        else
+            rm -rf "$TMP"
+            error "压缩包内未找到 zpanel 二进制"
+        fi
+        rm -rf "$TMP"
+        info "二进制已安装: $BIN_PATH"
+        return
+    fi
 
     if [[ "${ZPANEL_INSTALL_LOCAL:-}" == "1" ]]; then
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -269,6 +293,7 @@ main() {
             --password)   PASSWORD="$2"; shift 2 ;;
             --entry)      ENTRY="$2"; shift 2 ;;
             --mirror)     ZPANEL_MIRROR="$2"; shift 2 ;;
+            --package)    ZPANEL_PACKAGE="$2"; shift 2 ;;
             --interactive|-i) INTERACTIVE=1; shift ;;
             *) shift ;;
         esac
