@@ -1,0 +1,54 @@
+# 构建产物
+/bin/
+/dist/
+/web/dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go
+/vendor/
+*.test
+*.out
+coverage.out
+
+# 前端
+/web/node_modules/
+/web/.vite/
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 环境与密钥（禁止入库）
+.env
+.env.*
+!.env.example
+configs/config.yaml
+*.pem
+*.key
+*.crt
+
+# 运行时数据
+/var/
+*.db
+*.sqlite
+*.sqlite3
+
+# 日志
+*.log
+/logs/
+
+# 临时文件
+/tmp/
+*.tmp
+*.bak
