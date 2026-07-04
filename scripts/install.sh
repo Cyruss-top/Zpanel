@@ -295,16 +295,60 @@ setup_symlink() {
     ln -sf "$BIN_PATH" /usr/bin/zp
 }
 
+is_private_ip() {
+    local ip=$1
+    [[ "$ip" =~ ^10\. ]] && return 0
+    [[ "$ip" =~ ^192\.168\. ]] && return 0
+    [[ "$ip" =~ ^172\.(1[6-9]|2[0-9]|3[0-1])\. ]] && return 0
+    [[ "$ip" =~ ^127\. ]] && return 0
+    return 1
+}
+
+detect_public_ip() {
+    local ip url
+    for url in \
+        "https://api.ipify.org" \
+        "https://ifconfig.me/ip" \
+        "https://ip.sb" \
+        "https://icanhazip.com" \
+        "https://myip.ipip.net"; do
+        ip=$(curl -fsSL --connect-timeout 3 "$url" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        if [[ -n "$ip" ]] && ! is_private_ip "$ip"; then
+            echo "$ip"
+            return 0
+        fi
+    done
+    return 1
+}
+
+detect_local_ip() {
+    local ip
+    for ip in $(hostname -I 2>/dev/null); do
+        [[ -n "$ip" ]] && { echo "$ip"; return 0; }
+    done
+    echo "127.0.0.1"
+}
+
 print_info() {
     local PORT=$1 USERNAME=$2 PASSWORD=$3 ENTRY=$4
-    local IP PATH_SUFFIX=""
-    IP=$(curl -s --connect-timeout 3 ip.sb 2>/dev/null || hostname -I 2>/dev/null | awk '{print $1}')
+    local GOT_PUBLIC="" PUBLIC_IP LOCAL_IP PATH_SUFFIX="" LABEL="面板地址"
+    GOT_PUBLIC=$(detect_public_ip || true)
+    LOCAL_IP=$(detect_local_ip)
+    if [[ -n "$GOT_PUBLIC" ]]; then
+        PUBLIC_IP="$GOT_PUBLIC"
+        LABEL="面板地址(公网)"
+    else
+        PUBLIC_IP="$LOCAL_IP"
+    fi
     [[ -n "$ENTRY" ]] && PATH_SUFFIX="/${ENTRY}/"
     echo ""
     echo "============================================"
     echo -e "  ${GREEN}Zpanel 安装成功!${NC}"
     echo "============================================"
-    echo -e "  面板地址: http://${IP}:${PORT}${PATH_SUFFIX}"
+    echo -e "  ${LABEL}: http://${PUBLIC_IP}:${PORT}${PATH_SUFFIX}"
+    if [[ -n "$GOT_PUBLIC" && "$LOCAL_IP" != "$GOT_PUBLIC" ]]; then
+        echo -e "  面板地址(内网): http://${LOCAL_IP}:${PORT}${PATH_SUFFIX}"
+    fi
     echo -e "  用户名:   ${USERNAME}"
     echo -e "  密码:     ${PASSWORD}"
     [[ -n "$ENTRY" ]] && echo -e "  安全入口: /${ENTRY}/"

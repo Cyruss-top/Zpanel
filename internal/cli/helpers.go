@@ -33,34 +33,6 @@ func panelSystemctl(args ...string) error {
 	return nil
 }
 
-func serverIP() string {
-	if out, err := exec.Command("curl", "-s", "--connect-timeout", "3", "ip.sb").Output(); err == nil {
-		return strings.TrimSpace(string(out))
-	}
-	if out, err := exec.Command("hostname", "-I").Output(); err == nil {
-		fields := strings.Fields(string(out))
-		if len(fields) > 0 {
-			return fields[0]
-		}
-	}
-	return "127.0.0.1"
-}
-
-func printPanelURL(cfg *config.Config) {
-	ip := serverIP()
-	entry := cfg.EntryPrefix()
-	path := ""
-	if entry != "" {
-		path = entry + "/"
-	}
-	fmt.Printf("面板地址: http://%s:%d%s\n", ip, cfg.Panel.Port, path)
-	fmt.Printf("用户名:   %s\n", cfg.Auth.Username)
-	if cfg.Panel.Entry != "" {
-		fmt.Printf("安全入口: /%s/\n", cfg.Panel.Entry)
-	}
-	fmt.Printf("配置文件: %s\n", configPath())
-}
-
 func requireRoot() error {
 	if os.Geteuid() != 0 {
 		return fmt.Errorf("此操作需要 root 权限")
