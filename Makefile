@@ -14,11 +14,6 @@ frontend:
 
 build-all: frontend build
 
-# Vue 构建产物复制到 embed 目录（go:embed 不允许 ../ 路径）
-sync-frontend:
-	cd web && npm run build
-	rm -rf internal/web/dist && cp -r web/dist internal/web/dist
-
 test:
 	go test ./...
 

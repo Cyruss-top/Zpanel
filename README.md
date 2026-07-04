@@ -27,7 +27,7 @@ zpanel site list    # 站点列表
 
 ## 版本
 
-当前版本：**v0.2.0**（见 [VERSION](VERSION)）
+当前版本：**v0.3.0**（见 [VERSION](VERSION)）
 
 变更记录：[CHANGELOG.md](CHANGELOG.md)
 

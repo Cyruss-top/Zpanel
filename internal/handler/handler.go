@@ -33,13 +33,7 @@ func (h *Handler) Register(r *gin.Engine) {
 	authed.Use(h.auth.Middleware())
 	authed.GET("/monitor/overview", h.MonitorOverview)
 
-	r.NoRoute(func(c *gin.Context) {
-		if c.Request.Method != http.MethodGet {
-			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
-			return
-		}
-		c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
-	})
+	h.registerStatic(r)
 }
 
 func (h *Handler) Health(c *gin.Context) {

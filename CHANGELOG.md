@@ -5,6 +5,16 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-04
+
+### Added
+- Vue 3 + Vite + TypeScript + Naive UI 前端
+- 运维控制台主题（深侧栏 + 浅内容区）
+- 登录页 + JWT 路由守卫
+- 系统概览页（CPU / 内存 / 磁盘 / 负载）
+- 响应式布局（Desktop / Tablet / Mobile）
+- Go 嵌入前端静态资源 + SPA 路由
+
 ## [0.2.0] - 2026-07-04
 
 ### Added
@@ -31,6 +41,7 @@
 - 项目 README
 - 版本标记与 Git 备份规范
 
-[Unreleased]: https://github.com/your-org/zpanel/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/your-org/zpanel/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/your-org/zpanel/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/your-org/zpanel/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/your-org/zpanel/releases/tag/v0.1.0

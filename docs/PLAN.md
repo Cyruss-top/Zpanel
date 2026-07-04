@@ -281,20 +281,38 @@ chore: release v0.2.0
 | 6 | JWT auth login API | 完成 |
 | 7 | monitor overview API | 完成 |
 
-**v0.2.0 已达成。** 下一步进入 **v0.3.0**：Vue 前端骨架 + 登录 + 概览页。
+**v0.3.0 已达成。** 可在浏览器登录面板。下一步 **v0.4.0**：LNMP 安装 + 站点管理。
 
 | # | 任务 | 状态 |
 |---|------|------|
-| 1 | Vite + Vue 3 + TS 初始化 | **下一步** |
-| 2 | Naive UI + 主题 + 布局 | 待开始 |
-| 3 | 登录页 + 路由守卫 | 待开始 |
-| 4 | 概览页对接 monitor API | 待开始 |
+| 1 | Vite + Vue 3 + TS 初始化 | 完成 |
+| 2 | Naive UI + 主题 + 布局 | 完成 |
+| 3 | 登录页 + 路由守卫 | 完成 |
+| 4 | 概览页对接 monitor API | 完成 |
+
+### Phase C — LNMP 与站点（v0.4.0，下一步）
+
+| # | 任务 | 状态 |
+|---|------|------|
+| 1 | `scripts/lnmp-install.sh` | **下一步** |
+| 2 | LNMP 状态 / 安装 API | 待开始 |
+| 3 | 站点 CRUD（HTML/PHP/Go） | 待开始 |
+| 4 | 前端环境页 + 站点页 | 待开始 |
 
 **启动命令（开发环境）：**
 ```bash
 cp configs/config.example.yaml configs/config.yaml
+make build-all    # 或 cd web && npm run build && go build ...
 go run ./cmd/zpanel server
-# 默认账号 admin / admin（首次启动日志会提示）
+# 浏览器打开 http://127.0.0.1:8888  账号 admin / admin
+```
+
+**前端开发（热更新）：**
+```bash
+# 终端 1
+go run ./cmd/zpanel server
+# 终端 2
+cd web && npm run dev   # http://localhost:5173
 ```
 
 **API 测试：**
