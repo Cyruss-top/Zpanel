@@ -51,13 +51,7 @@ func serveSPA(c *gin.Context, root fs.FS, entryPrefix string) {
 	case strings.HasSuffix(path, ".html"):
 		ctype = "text/html; charset=utf-8"
 		if entryPrefix != "" && path == "index.html" {
-			inject := `<script>window.__ZPANEL_ENTRY__="` + entryPrefix + `"</script>`
-			html := string(data)
-			if strings.Contains(html, "</head>") {
-				html = strings.Replace(html, "</head>", inject+"</head>", 1)
-			} else {
-				html = inject + html
-			}
+			html := rewriteIndexForEntry(string(data), entryPrefix)
 			data = []byte(html)
 		}
 	case strings.HasSuffix(path, ".js"):
@@ -70,4 +64,19 @@ func serveSPA(c *gin.Context, root fs.FS, entryPrefix string) {
 		ctype = "image/x-icon"
 	}
 	c.Data(http.StatusOK, ctype, data)
+}
+
+// rewriteIndexForEntry 安全入口下修正静态资源路径，避免 /assets 404 导致白屏
+func rewriteIndexForEntry(html, entryPrefix string) string {
+	base := entryPrefix + "/"
+	// 绝对路径 /assets/ → 相对 assets/（配合 base href）
+	html = strings.ReplaceAll(html, `src="/assets/`, `src="assets/`)
+	html = strings.ReplaceAll(html, `href="/assets/`, `href="assets/`)
+	html = strings.ReplaceAll(html, `src="./assets/`, `src="assets/`)
+	html = strings.ReplaceAll(html, `href="./assets/`, `href="assets/`)
+	inject := `<base href="` + base + `"><script>window.__ZPANEL_ENTRY__="` + entryPrefix + `"</script>`
+	if strings.Contains(html, "</head>") {
+		return strings.Replace(html, "</head>", inject+"</head>", 1)
+	}
+	return inject + html
 }

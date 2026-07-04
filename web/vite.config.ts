@@ -9,7 +9,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  base: '/',
+  base: './',
   build: {
     outDir: '../internal/web/dist',
     emptyOutDir: true,

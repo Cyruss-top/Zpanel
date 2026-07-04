@@ -55,6 +55,9 @@ func (h *Handler) Register(r *gin.Engine) {
 		r.GET("/", func(c *gin.Context) {
 			c.Redirect(http.StatusFound, entry+"/")
 		})
+		r.GET(entry, func(c *gin.Context) {
+			c.Redirect(http.StatusFound, entry+"/")
+		})
 		h.mountPanel(r.Group(entry), entry)
 		return
 	}
