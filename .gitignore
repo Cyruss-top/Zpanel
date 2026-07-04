@@ -2,6 +2,7 @@
 /bin/
 /dist/
 /web/dist/
+/zpanel
 *.exe
 *.dll
 *.so
