@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -26,6 +27,7 @@ type PanelConfig struct {
 	Port int    `yaml:"port"`
 	Bind string `yaml:"bind"`
 	SSL  bool   `yaml:"ssl"`
+	Entry string `yaml:"entry"` // 安全入口后缀，如 abc123 → /abc123/
 }
 
 type AuthConfig struct {
@@ -134,6 +136,35 @@ func (c *Config) SQLitePath() string {
 // ListenAddr 返回 HTTP 监听地址
 func (c *Config) ListenAddr() string {
 	return fmt.Sprintf("%s:%d", c.Panel.Bind, c.Panel.Port)
+}
+
+// EntryPrefix 返回安全入口路径前缀，如 /abc123；未设置返回空字符串
+func (c *Config) EntryPrefix() string {
+	e := strings.TrimSpace(c.Panel.Entry)
+	e = strings.Trim(e, "/")
+	if e == "" {
+		return ""
+	}
+	return "/" + e
+}
+
+// NormalizeEntry 校验并规范化入口后缀
+func NormalizeEntry(entry string) (string, error) {
+	entry = strings.TrimSpace(entry)
+	entry = strings.Trim(entry, "/")
+	if entry == "" {
+		return "", nil
+	}
+	if len(entry) < 3 || len(entry) > 32 {
+		return "", fmt.Errorf("入口后缀长度须为 3~32 个字符")
+	}
+	for _, r := range entry {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '-' || r == '_' {
+			continue
+		}
+		return "", fmt.Errorf("入口后缀仅允许字母、数字、-、_")
+	}
+	return entry, nil
 }
 
 // Save 写入配置文件

@@ -1,3 +1,5 @@
+import { getAPIBase } from '@/utils/base'
+
 export interface APIResponse<T = unknown> {
   ok: boolean
   message: string
@@ -13,7 +15,7 @@ export class APIError extends Error {
   }
 }
 
-const BASE = '/api/v1'
+const BASE = getAPIBase()
 
 type RouterLike = { push: (path: string) => void }
 

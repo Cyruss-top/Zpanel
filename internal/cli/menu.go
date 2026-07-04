@@ -16,12 +16,14 @@ func runInteractiveMenu() {
 		fmt.Println("  1. 查看面板入口信息")
 		fmt.Println("  2. 修改面板密码")
 		fmt.Println("  3. 修改面板端口")
-		fmt.Println("  4. 启动面板")
-		fmt.Println("  5. 停止面板")
-		fmt.Println("  6. 重启面板")
-		fmt.Println("  7. 查看 LNMP 状态")
-		fmt.Println("  8. 一键安装 LNMP")
-		fmt.Println("  9. 查看站点列表")
+		fmt.Println("  4. 修改安全入口后缀")
+		fmt.Println("  5. 修改管理员用户名")
+		fmt.Println("  6. 启动面板")
+		fmt.Println("  7. 停止面板")
+		fmt.Println("  8. 重启面板")
+		fmt.Println("  9. 查看 LNMP 状态")
+		fmt.Println("  10. 一键安装 LNMP")
+		fmt.Println("  11. 查看站点列表")
 		fmt.Println("  0. 退出")
 		fmt.Println("===============================================")
 		fmt.Print("请输入命令编号: ")
@@ -45,16 +47,28 @@ func runInteractiveMenu() {
 			p, _ := reader.ReadString('\n')
 			err = newPortSetCmd().RunE(nil, []string{strings.TrimSpace(p)})
 		case "4":
-			err = newStartCmd().RunE(nil, nil)
+			fmt.Print("安全入口后缀（留空清除）: ")
+			e, _ := reader.ReadString('\n')
+			e = strings.TrimSpace(e)
+			if e == "" {
+				e = "clear"
+			}
+			err = newEntrySetCmd().RunE(nil, []string{e})
 		case "5":
-			err = newStopCmd().RunE(nil, nil)
+			fmt.Print("新用户名: ")
+			u, _ := reader.ReadString('\n')
+			err = newUserUsernameCmd().RunE(nil, []string{strings.TrimSpace(u)})
 		case "6":
-			err = newRestartCmd().RunE(nil, nil)
+			err = newStartCmd().RunE(nil, nil)
 		case "7":
-			newLNMPStatusCmd().Run(nil, nil)
+			err = newStopCmd().RunE(nil, nil)
 		case "8":
-			err = newLNMPInstallCmd().RunE(nil, nil)
+			err = newRestartCmd().RunE(nil, nil)
 		case "9":
+			newLNMPStatusCmd().Run(nil, nil)
+		case "10":
+			err = newLNMPInstallCmd().RunE(nil, nil)
+		case "11":
 			err = newSiteListCmd().RunE(nil, nil)
 		case "0", "q", "exit":
 			return

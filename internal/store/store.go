@@ -105,7 +105,11 @@ func (s *Store) UpsertUser(username, passwordHash string) error {
 	return err
 }
 
-// WriteAudit 记录审计日志
+// DeleteUserByUsername 删除指定用户
+func (s *Store) DeleteUserByUsername(username string) error {
+	_, err := s.db.Exec(`DELETE FROM users WHERE username = ?`, username)
+	return err
+}
 func (s *Store) WriteAudit(action, detail, ip string) error {
 	now := time.Now().UTC().Format(time.RFC3339)
 	_, err := s.db.Exec(

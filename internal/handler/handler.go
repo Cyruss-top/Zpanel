@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/zex/zpanel/internal/auth"
 	"github.com/zex/zpanel/internal/config"
@@ -30,13 +32,11 @@ func New(cfg *config.Config, version string, st *store.Store, authSvc *auth.Serv
 	}
 }
 
-// Register 注册所有路由
-func (h *Handler) Register(r *gin.Engine) {
-	api := r.Group("/api/v1")
-	api.GET("/health", h.Health)
-	api.POST("/auth/login", h.Login)
+func (h *Handler) registerAPI(r gin.IRouter) {
+	r.GET("/health", h.Health)
+	r.POST("/auth/login", h.Login)
 
-	authed := api.Group("")
+	authed := r.Group("")
 	authed.Use(h.auth.Middleware())
 	authed.GET("/monitor/overview", h.MonitorOverview)
 	authed.GET("/lnmp/status", h.LNMPStatus)
@@ -45,6 +45,19 @@ func (h *Handler) Register(r *gin.Engine) {
 	authed.POST("/sites", h.CreateSite)
 	authed.GET("/sites/:id", h.GetSite)
 	authed.DELETE("/sites/:id", h.DeleteSite)
+}
 
-	h.registerStatic(r)
+// Register 注册所有路由
+func (h *Handler) Register(r *gin.Engine) {
+	entry := h.cfg.EntryPrefix()
+
+	if entry != "" {
+		r.GET("/", func(c *gin.Context) {
+			c.Redirect(http.StatusFound, entry+"/")
+		})
+		h.mountPanel(r.Group(entry), entry)
+		return
+	}
+
+	h.mountPanel(r, "")
 }

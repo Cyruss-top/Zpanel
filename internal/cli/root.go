@@ -28,6 +28,7 @@ func newRootCmd() *cobra.Command {
 		newStatusCmd(),
 		newUserCmd(),
 		newPortCmd(),
+		newEntryCmd(),
 		newLNMPCmd(),
 		newSiteCmd(),
 	)

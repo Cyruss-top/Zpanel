@@ -48,8 +48,16 @@ func serverIP() string {
 
 func printPanelURL(cfg *config.Config) {
 	ip := serverIP()
-	fmt.Printf("面板地址: http://%s:%d\n", ip, cfg.Panel.Port)
+	entry := cfg.EntryPrefix()
+	path := ""
+	if entry != "" {
+		path = entry + "/"
+	}
+	fmt.Printf("面板地址: http://%s:%d%s\n", ip, cfg.Panel.Port, path)
 	fmt.Printf("用户名:   %s\n", cfg.Auth.Username)
+	if cfg.Panel.Entry != "" {
+		fmt.Printf("安全入口: /%s/\n", cfg.Panel.Entry)
+	}
 	fmt.Printf("配置文件: %s\n", configPath())
 }
 

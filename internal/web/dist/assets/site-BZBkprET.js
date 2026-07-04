@@ -1,0 +1,1 @@
+import{E as e}from"./index-mb3FXwmb.js";function i(){return e("/sites")}function r(t){return e("/sites",{method:"POST",body:JSON.stringify(t)})}function n(t){return e(`/sites/${t}`,{method:"DELETE"})}export{r as c,n as d,i as f};

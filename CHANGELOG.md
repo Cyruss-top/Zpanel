@@ -5,6 +5,16 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-04
+
+### Added
+- 安全入口后缀（`panel.entry`）：访问路径如 `/mypanel/`，防面板扫描
+- 安装脚本支持自定义：`--port` `--username` `--password` `--entry` `--interactive`
+- CLI：`zpanel entry show/set`、`zpanel user username`
+- 交互式菜单新增：修改安全入口、修改管理员用户名
+- Debian 12 中文安装教程 `docs/INSTALL-DEBIAN12.md`
+- 前端动态 base 路径（`__ZPANEL_ENTRY__` 注入）
+
 ## [0.5.0] - 2026-07-04
 
 ### Added

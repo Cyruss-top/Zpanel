@@ -10,27 +10,31 @@ import (
 	webembed "github.com/zex/zpanel/internal/web"
 )
 
-func (h *Handler) registerStatic(r *gin.Engine) {
+func (h *Handler) mountPanel(parent gin.IRouter, entryPrefix string) {
 	staticRoot, err := fs.Sub(webembed.StaticFS, "dist")
 	if err != nil {
 		return
 	}
 
-	r.NoRoute(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api/") {
-			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
-			return
-		}
+	h.registerAPI(parent.Group("/api/v1"))
+
+	serve := func(c *gin.Context) {
 		if c.Request.Method != http.MethodGet {
 			c.JSON(http.StatusNotFound, model.Fail("not found", "NOT_FOUND"))
 			return
 		}
-		serveSPA(c, staticRoot)
-	})
+		serveSPA(c, staticRoot, entryPrefix)
+	}
+	parent.GET("/", serve)
+	parent.GET("/*filepath", serve)
 }
 
-func serveSPA(c *gin.Context, root fs.FS) {
-	path := strings.TrimPrefix(c.Request.URL.Path, "/")
+func serveSPA(c *gin.Context, root fs.FS, entryPrefix string) {
+	path := c.Request.URL.Path
+	if entryPrefix != "" {
+		path = strings.TrimPrefix(path, entryPrefix)
+	}
+	path = strings.TrimPrefix(path, "/")
 	if path == "" {
 		path = "index.html"
 	}
@@ -46,6 +50,16 @@ func serveSPA(c *gin.Context, root fs.FS) {
 	switch {
 	case strings.HasSuffix(path, ".html"):
 		ctype = "text/html; charset=utf-8"
+		if entryPrefix != "" && path == "index.html" {
+			inject := `<script>window.__ZPANEL_ENTRY__="` + entryPrefix + `"</script>`
+			html := string(data)
+			if strings.Contains(html, "</head>") {
+				html = strings.Replace(html, "</head>", inject+"</head>", 1)
+			} else {
+				html = inject + html
+			}
+			data = []byte(html)
+		}
 	case strings.HasSuffix(path, ".js"):
 		ctype = "application/javascript"
 	case strings.HasSuffix(path, ".css"):

@@ -5,6 +5,7 @@ panel:
   port: 8888
   bind: "127.0.0.1"   # 开发默认仅本地；生产可改为 0.0.0.0
   ssl: false
+  # entry: "mypanel"   # 安全入口后缀，访问 http://ip:8888/mypanel/
 
 auth:
   username: admin

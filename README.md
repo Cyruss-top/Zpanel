@@ -2,45 +2,54 @@
 
 超级轻量版 Linux 可视化运维面板 — Go 单二进制部署，支持 LNMP 一键安装与 PHP / HTML / Go 项目管理。
 
+**仓库：** [https://github.com/Cyruss-top/Zpanel](https://github.com/Cyruss-top/Zpanel)
+
 ## 特性
 
 - 单二进制 + 嵌入式前端，安装即用
 - LNMP 一键安装（Nginx + MySQL + PHP-FPM）
 - 站点管理：HTML 静态站、PHP 项目、Go 反向代理
-- 系统监控、服务管理、SSL 证书、计划任务
+- 系统监控、服务管理
+- 安全入口后缀（防扫描）
 - CLI 管理：`zpanel` / `zp` 命令（对标宝塔 `bt`）
 
-## 快速安装
+## 快速安装（Debian 12 / Ubuntu）
 
 ```bash
-curl -sSL https://get.zpanel.io/install.sh | bash
+# 交互式安装（可自定义端口、账号、密码、安全入口）
+curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+
+# 命令行参数安装
+curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
+  --port 8888 --username admin --password 'yourpass' --entry mypanel
 ```
 
-当前版本：**v0.5.0**（见 [VERSION](VERSION)）
+详细教程：[docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md)
 
-## 一键安装（Linux）
+当前版本：**v0.6.0**（见 [VERSION](VERSION)）
+
+## 本地开发安装
 
 ```bash
-# 从发布包安装
-curl -sSL https://get.zpanel.io/install.sh | bash
-
-# 本地开发安装
 make build-all
-ZPANEL_INSTALL_LOCAL=1 sudo bash scripts/install.sh
+ZPANEL_INSTALL_LOCAL=1 sudo bash scripts/install.sh --interactive
 ```
 
 ## 管理命令
 
 ```bash
-zpanel              # 交互式菜单
-zpanel default      # 查看面板入口
-zpanel lnmp install # 安装 LNMP
-zpanel site list    # 站点列表
+zpanel                    # 交互式菜单
+zpanel default            # 查看面板入口
+zpanel user password 新密码
+zpanel user username 新用户名
+zpanel port set 9999
+zpanel entry set mypanel  # 设置安全入口后缀
+zpanel entry set clear    # 清除安全入口
+zpanel lnmp install       # 安装 LNMP
+zpanel site list          # 站点列表
 ```
 
 ## 版本
-
-当前版本：**v0.4.0**（见 [VERSION](VERSION)）
 
 变更记录：[CHANGELOG.md](CHANGELOG.md)
 
@@ -48,8 +57,9 @@ zpanel site list    # 站点列表
 
 ## 开发文档
 
+- [docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md) — Debian 12 安装教程
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — 完整技术规范
-- [docs/PLAN.md](docs/PLAN.md) — **开发计划与 Sprint 排期**
+- [docs/PLAN.md](docs/PLAN.md) — 开发计划与 Sprint 排期
 
 Agent Skill：`.cursor/skills/zpanel-dev/`（Zpanel 开发时自动加载）
 
