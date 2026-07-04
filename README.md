@@ -69,6 +69,7 @@ zpanel site list          # 站点列表
 ## 开发文档
 
 - [docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md) — Debian 12 安装教程（含 Gitee 国内节点）
+- [docs/GITEE-SYNC.md](docs/GITEE-SYNC.md) — Gitee 自动同步配置
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — 完整技术规范
 - [docs/PLAN.md](docs/PLAN.md) — 开发计划与 Sprint 排期
 
