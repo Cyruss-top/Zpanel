@@ -1,7 +1,11 @@
 # Zpanel 安装教程 — Debian 12
 
-> 轻量版 Linux 服务器运维面板，支持 LNMP 一键安装与 PHP / HTML / Go 站点管理。  
-> 项目地址：[https://github.com/Cyruss-top/Zpanel](https://github.com/Cyruss-top/Zpanel)
+> 轻量版 Linux 服务器运维面板，支持 LNMP 一键安装与 PHP / HTML / Go 站点管理。
+
+| 节点 | 地址 |
+|------|------|
+| **中国大陆（推荐）** | [https://gitee.com/Ressss2023/Zpanel](https://gitee.com/Ressss2023/Zpanel) |
+| 国际 | [https://github.com/Cyruss-top/Zpanel](https://github.com/Cyruss-top/Zpanel) |
 
 ---
 
@@ -40,26 +44,39 @@ ufw reload
 
 ## 三、一键安装
 
-> **没有 curl？** 先执行 `apt update && apt install -y curl wget`，或直接用下面的 **wget** 命令。
+> **没有 curl？** 先执行 `apt update && apt install -y curl wget`，或直接用 **wget** 命令。  
+> **中国大陆服务器** 请优先使用下方 **Gitee 节点**，速度更快、更稳定。
 
 ### 方式 A：交互式安装（推荐）
 
-安装过程中可自定义 **端口、用户名、密码、安全入口后缀**：
+安装过程中可自定义 **端口、用户名、密码、安全入口后缀**。
+
+#### 中国大陆节点（Gitee，推荐）
 
 ```bash
-# 使用 curl
+# wget 一行安装（推荐，无需 curl）
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --mirror gitee --interactive
+```
+
+```bash
+# 下载后执行
+wget -qO install.sh https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh
+bash install.sh --mirror gitee --interactive
+```
+
+```bash
+# 有 curl 时
+curl -sSL https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --mirror gitee --interactive
+```
+
+#### 国际节点（GitHub）
+
+```bash
 curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh -o install.sh
 bash install.sh --interactive
 ```
 
 ```bash
-# 没有 curl 时用 wget（Debian 最小化镜像常见）
-wget -qO install.sh https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh
-bash install.sh --interactive
-```
-
-```bash
-# 一行命令（wget 管道）
 wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
 ```
 
@@ -80,18 +97,21 @@ http://你的服务器IP:8888/mypanel/
 
 ### 方式 B：命令行参数安装
 
+#### 中国大陆（Gitee）
+
 ```bash
-# 使用 curl
-curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- \
+  --mirror gitee \
   --port 9999 \
   --username myadmin \
   --password 'StrongPass123' \
   --entry mypanel
 ```
 
+#### 国际（GitHub）
+
 ```bash
-# 没有 curl 时用 wget
-wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
+curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- \
   --port 9999 \
   --username myadmin \
   --password 'StrongPass123' \
@@ -104,9 +124,23 @@ wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/insta
 | `--username` | 管理员用户名 |
 | `--password` | 管理员密码 |
 | `--entry` | 安全入口后缀（3~32 位字母数字） |
+| `--mirror` | 下载镜像：`gitee`（国内）或 `github`（国际） |
 | `--interactive` / `-i` | 进入交互配置 |
 
 ### 方式 C：从源码本地安装（开发者）
+
+#### 中国大陆（Gitee）
+
+```bash
+apt install -y git golang nodejs npm
+git clone https://gitee.com/Ressss2023/Zpanel.git
+cd Zpanel
+make build-all
+
+ZPANEL_INSTALL_LOCAL=1 bash scripts/install.sh --interactive
+```
+
+#### 国际（GitHub）
 
 ```bash
 apt install -y git golang nodejs npm
@@ -259,11 +293,21 @@ Debian 最小化镜像可能未预装 curl，任选其一：
 # 安装 curl（推荐）
 apt update && apt install -y curl wget ca-certificates
 
-# 或直接用 wget 安装面板
-wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+# 或直接用 wget + Gitee 国内节点安装
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --mirror gitee --interactive
 ```
 
-### 1. 无法访问面板
+### 1. 国内下载 GitHub 很慢或失败
+
+请改用 **Gitee 节点**：
+
+```bash
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --mirror gitee --interactive
+```
+
+安装脚本会优先从 Gitee Releases 下载二进制，失败时自动回退 GitHub。
+
+### 2. 无法访问面板
 
 ```bash
 zpanel status          # 检查服务是否运行
@@ -271,13 +315,13 @@ ss -tlnp | grep 8888   # 检查端口监听
 zpanel default         # 查看正确访问地址（含安全入口）
 ```
 
-### 2. 忘记密码
+### 3. 忘记密码
 
 ```bash
 zpanel user password 新密码
 ```
 
-### 3. 忘记安全入口后缀
+### 4. 忘记安全入口后缀
 
 ```bash
 grep entry /etc/zpanel/config.yaml
@@ -286,7 +330,7 @@ zpanel entry set clear
 zpanel restart
 ```
 
-### 4. LNMP 安装失败
+### 5. LNMP 安装失败
 
 确保以 root 运行，且系统为 Debian/Ubuntu：
 
@@ -312,8 +356,12 @@ journalctl -u zpanel -n 50
 ## 十二、更新面板
 
 ```bash
-# 拉取新版本后
+# Gitee（国内）
 cd Zpanel && git pull
+# 若从 GitHub 克隆，可添加 Gitee 远程：
+# git remote add gitee https://gitee.com/Ressss2023/Zpanel.git
+# git pull gitee main
+
 make build-all
 install -m 755 bin/zpanel /usr/local/bin/zpanel
 systemctl restart zpanel
@@ -321,4 +369,4 @@ systemctl restart zpanel
 
 ---
 
-*教程随项目更新，问题反馈请提交 [GitHub Issues](https://github.com/Cyruss-top/Zpanel/issues)。*
+*教程随项目更新。问题反馈：[Gitee Issues](https://gitee.com/Ressss2023/Zpanel/issues) · [GitHub Issues](https://github.com/Cyruss-top/Zpanel/issues)*

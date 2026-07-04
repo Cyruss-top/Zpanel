@@ -2,7 +2,10 @@
 
 超级轻量版 Linux 可视化运维面板 — Go 单二进制部署，支持 LNMP 一键安装与 PHP / HTML / Go 项目管理。
 
-**仓库：** [https://github.com/Cyruss-top/Zpanel](https://github.com/Cyruss-top/Zpanel)
+| 节点 | 地址 |
+|------|------|
+| **中国大陆（推荐）** | [https://gitee.com/Ressss2023/Zpanel](https://gitee.com/Ressss2023/Zpanel) |
+| 国际 | [https://github.com/Cyruss-top/Zpanel](https://github.com/Cyruss-top/Zpanel) |
 
 ## 特性
 
@@ -15,12 +18,21 @@
 
 ## 快速安装（Debian 12 / Ubuntu）
 
-```bash
-# 交互式安装（可自定义端口、账号、密码、安全入口）
-curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+### 中国大陆（Gitee，推荐）
 
-# 没有 curl 时用 wget
-wget -qO- https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+```bash
+# 交互式安装
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --mirror gitee --interactive
+
+# 指定端口、账号、密码、安全入口
+wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- \
+  --mirror gitee --port 8888 --username admin --password 'yourpass' --entry mypanel
+```
+
+### 国际（GitHub）
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
 ```
 
 详细教程：[docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md)
@@ -56,7 +68,7 @@ zpanel site list          # 站点列表
 
 ## 开发文档
 
-- [docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md) — Debian 12 安装教程
+- [docs/INSTALL-DEBIAN12.md](docs/INSTALL-DEBIAN12.md) — Debian 12 安装教程（含 Gitee 国内节点）
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — 完整技术规范
 - [docs/PLAN.md](docs/PLAN.md) — 开发计划与 Sprint 排期
 

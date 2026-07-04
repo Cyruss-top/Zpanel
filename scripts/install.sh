@@ -1,15 +1,20 @@
 #!/bin/bash
 # Zpanel 一键安装脚本（适配 Debian 12 / Ubuntu）
 # 用法:
-#   curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash
+#   # 国际节点 (GitHub)
+#   curl -sSL https://raw.githubusercontent.com/Cyruss-top/Zpanel/main/scripts/install.sh | bash -s -- --interactive
+#   # 中国大陆节点 (Gitee，推荐)
+#   wget -qO- https://gitee.com/Ressss2023/Zpanel/raw/main/scripts/install.sh | bash -s -- --interactive
 #   bash scripts/install.sh --port 8888 --username admin --password 'yourpass' --entry mypanel
-#   bash scripts/install.sh --interactive
+#   bash scripts/install.sh --mirror gitee --interactive
 #   ZPANEL_INSTALL_LOCAL=1 bash scripts/install.sh --interactive
 
 set -euo pipefail
 
 ZPANEL_VERSION="${ZPANEL_VERSION:-latest}"
+ZPANEL_MIRROR="${ZPANEL_MIRROR:-github}"   # github | gitee
 GITHUB_REPO="${GITHUB_REPO:-Cyruss-top/Zpanel}"
+GITEE_REPO="${GITEE_REPO:-Ressss2023/Zpanel}"
 INSTALL_DIR="/usr/local/zpanel"
 BIN_PATH="/usr/local/bin/zpanel"
 CONFIG_DIR="/etc/zpanel"
@@ -48,6 +53,30 @@ install_deps() {
     fi
 }
 
+fetch_url() {
+    local url=$1
+    if command -v curl &>/dev/null; then
+        curl -fsSL "$url"
+    elif command -v wget &>/dev/null; then
+        wget -qO- "$url"
+    else
+        error "需要 curl 或 wget，请执行: apt install -y curl wget"
+    fi
+}
+
+release_urls() {
+    local arch=$1
+    local gh="https://github.com/${GITHUB_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
+    local gt="https://gitee.com/${GITEE_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${arch}.tar.gz"
+    if [[ "$ZPANEL_MIRROR" == "gitee" ]]; then
+        echo "$gt"
+        echo "$gh"
+    else
+        echo "$gh"
+        echo "$gt"
+    fi
+}
+
 install_binary() {
     mkdir -p "$INSTALL_DIR/bin" "$INSTALL_DIR/scripts" "$INSTALL_DIR/templates"
 
@@ -70,15 +99,26 @@ install_binary() {
         *) error "不支持的架构: $ARCH" ;;
     esac
 
-    URL="https://github.com/${GITHUB_REPO}/releases/download/${ZPANEL_VERSION}/zpanel-linux-${ARCH}.tar.gz"
-    info "下载 Zpanel ${ZPANEL_VERSION} (${ARCH})..."
+    info "下载 Zpanel ${ZPANEL_VERSION} (${ARCH})，镜像: ${ZPANEL_MIRROR}..."
     TMP=$(mktemp -d)
-    if curl -fsSL "$URL" | tar xz -C "$TMP" 2>/dev/null; then
+    local downloaded=0 url
+    while IFS= read -r url; do
+        [[ -z "$url" ]] && continue
+        info "尝试: $url"
+        if fetch_url "$url" | tar xz -C "$TMP" 2>/dev/null; then
+            downloaded=1
+            break
+        fi
+        warn "下载失败: $url"
+    done < <(release_urls "$ARCH")
+
+    if [[ $downloaded -eq 1 ]]; then
         install -m 755 "$TMP/zpanel" "$BIN_PATH"
         rm -rf "$TMP"
         info "二进制已安装: $BIN_PATH"
         return
     fi
+    rm -rf "$TMP"
     warn "远程下载失败，尝试使用本地 bin/zpanel"
     SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
     LOCAL_BIN="$(cd "$SCRIPT_DIR/.." && pwd)/bin/zpanel"
@@ -216,6 +256,7 @@ main() {
             --username)   USERNAME="$2"; shift 2 ;;
             --password)   PASSWORD="$2"; shift 2 ;;
             --entry)      ENTRY="$2"; shift 2 ;;
+            --mirror)     ZPANEL_MIRROR="$2"; shift 2 ;;
             --interactive|-i) INTERACTIVE=1; shift ;;
             *) shift ;;
         esac
