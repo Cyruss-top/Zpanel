@@ -193,6 +193,44 @@ install_binary() {
     install -m 755 "$LOCAL_BIN" "$BIN_PATH"
 }
 
+install_scripts() {
+    mkdir -p "$INSTALL_DIR/scripts"
+    local dst="$INSTALL_DIR/scripts/uninstall.sh"
+    local src=""
+
+    if [[ -n "${BASH_SOURCE[0]:-}" ]] && [[ -f "$(dirname "${BASH_SOURCE[0]}")/uninstall.sh" ]]; then
+        src="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/uninstall.sh"
+    fi
+
+    if [[ -n "$src" && -f "$src" ]]; then
+        cp "$src" "$dst"
+        chmod 755 "$dst"
+        info "已安装卸载脚本: $dst"
+        return
+    fi
+
+    if [[ -n "${ZPANEL_BASE_URL:-}" ]]; then
+        if fetch_url "${ZPANEL_BASE_URL%/}/uninstall.sh" > "$dst" 2>/dev/null; then
+            chmod 755 "$dst"
+            info "已安装卸载脚本: $dst"
+            return
+        fi
+    fi
+
+    local url
+    for url in \
+        "https://gitee.com/${GITEE_REPO}/raw/main/scripts/uninstall.sh" \
+        "https://raw.githubusercontent.com/${GITHUB_REPO}/main/scripts/uninstall.sh"; do
+        if fetch_url "$url" > "$dst" 2>/dev/null; then
+            sed -i 's/\r$//' "$dst" 2>/dev/null || true
+            chmod 755 "$dst"
+            info "已安装卸载脚本: $dst"
+            return
+        fi
+    done
+    warn "未能下载 uninstall.sh，仍可使用 zpanel uninstall 命令卸载"
+}
+
 prompt_config() {
     local FLAG_PORT=0 FLAG_USER=0 FLAG_PASS=0 FLAG_ENTRY=0
     [[ "$PORT" != "$DEFAULT_PORT" ]] && FLAG_PORT=1
@@ -358,6 +396,45 @@ print_info() {
     echo "============================================"
 }
 
+install_scripts() {
+    mkdir -p "$INSTALL_DIR/scripts"
+    local dst="$INSTALL_DIR/scripts/uninstall.sh"
+    local src=""
+
+    if [[ -n "${BASH_SOURCE[0]:-}" ]] && [[ -f "$(dirname "${BASH_SOURCE[0]}")/uninstall.sh" ]]; then
+        src="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/uninstall.sh"
+    fi
+
+    if [[ -n "$src" && -f "$src" ]]; then
+        cp "$src" "$dst"
+        chmod 755 "$dst"
+        info "已安装卸载脚本: $dst"
+        return
+    fi
+
+    if [[ -n "${ZPANEL_BASE_URL:-}" ]]; then
+        if fetch_url "${ZPANEL_BASE_URL%/}/uninstall.sh" > "$dst" 2>/dev/null; then
+            sed -i 's/\r$//' "$dst" 2>/dev/null || true
+            chmod 755 "$dst"
+            info "已安装卸载脚本: $dst"
+            return
+        fi
+    fi
+
+    local url
+    for url in \
+        "https://gitee.com/${GITEE_REPO}/raw/main/scripts/uninstall.sh" \
+        "https://raw.githubusercontent.com/${GITHUB_REPO}/main/scripts/uninstall.sh"; do
+        if fetch_url "$url" > "$dst" 2>/dev/null; then
+            sed -i 's/\r$//' "$dst" 2>/dev/null || true
+            chmod 755 "$dst"
+            info "已安装卸载脚本: $dst"
+            return
+        fi
+    done
+    warn "未能下载 uninstall.sh，仍可使用 zpanel uninstall 命令卸载"
+}
+
 main() {
     local PORT=$DEFAULT_PORT USERNAME="admin" PASSWORD="" ENTRY="" INTERACTIVE=0
 
@@ -379,6 +456,7 @@ main() {
     prompt_config
     install_deps
     install_binary
+    install_scripts
     setup_symlink
     PASSWORD=$(init_config "$PORT" "$USERNAME" "$PASSWORD" "$ENTRY")
     setup_service

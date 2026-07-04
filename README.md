@@ -58,6 +58,8 @@ zpanel entry set mypanel  # 设置安全入口后缀
 zpanel entry set clear    # 清除安全入口
 zpanel lnmp install       # 安装 LNMP
 zpanel site list          # 站点列表
+zpanel uninstall          # 卸载面板
+zpanel uninstall -y --purge  # 完全卸载（含配置）
 ```
 
 ## 版本

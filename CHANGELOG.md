@@ -5,6 +5,14 @@
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-07-04
+
+### Added
+- `zpanel uninstall` 命令（支持 `-y` `--purge`）
+- 交互式菜单「12. 卸载面板」
+- 完善 `scripts/uninstall.sh`（确认提示、purge 选项）
+- 安装时自动部署卸载脚本到 `/usr/local/zpanel/scripts/`
+
 ## [0.7.1] - 2026-07-04
 
 ### Fixed

@@ -24,6 +24,7 @@ func runInteractiveMenu() {
 		fmt.Println("  9. 查看 LNMP 状态")
 		fmt.Println("  10. 一键安装 LNMP")
 		fmt.Println("  11. 查看站点列表")
+		fmt.Println("  12. 卸载面板")
 		fmt.Println("  0. 退出")
 		fmt.Println("===============================================")
 		fmt.Print("请输入命令编号: ")
@@ -70,6 +71,15 @@ func runInteractiveMenu() {
 			err = newLNMPInstallCmd().RunE(nil, nil)
 		case "11":
 			err = newSiteListCmd().RunE(nil, nil)
+		case "12":
+			fmt.Print("确认卸载 Zpanel? [y/N] ")
+			ans, _ := reader.ReadString('\n')
+			ans = strings.TrimSpace(strings.ToLower(ans))
+			if ans == "y" || ans == "yes" {
+				err = runUninstall(false)
+			} else {
+				fmt.Println("已取消")
+			}
 		case "0", "q", "exit":
 			return
 		default:

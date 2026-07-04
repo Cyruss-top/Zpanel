@@ -31,6 +31,7 @@ func newRootCmd() *cobra.Command {
 		newEntryCmd(),
 		newLNMPCmd(),
 		newSiteCmd(),
+		newUninstallCmd(),
 	)
 	return root
 }
