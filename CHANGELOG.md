@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+## [0.7.4] - 2026-07-04
+
+### Changed
+- 卸载支持两种模式：保留站点数据 / 彻底删除干净（含 /var/www）
+- `uninstall.sh` 与 `zpanel uninstall` 交互式二选一菜单
+
 ## [0.7.3] - 2026-07-04
 
 ### Fixed

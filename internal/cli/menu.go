@@ -72,14 +72,7 @@ func runInteractiveMenu() {
 		case "11":
 			err = newSiteListCmd().RunE(nil, nil)
 		case "12":
-			fmt.Print("确认卸载 Zpanel? [y/N] ")
-			ans, _ := reader.ReadString('\n')
-			ans = strings.TrimSpace(strings.ToLower(ans))
-			if ans == "y" || ans == "yes" {
-				err = runUninstall(false)
-			} else {
-				fmt.Println("已取消")
-			}
+			err = RunUninstallInteractive()
 		case "0", "q", "exit":
 			return
 		default:

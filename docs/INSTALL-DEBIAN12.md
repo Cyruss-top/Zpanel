@@ -319,29 +319,36 @@ zpanel user password '新密码'
 
 ## 九、卸载
 
+### 两种模式
+
+| 选项 | 说明 |
+|------|------|
+| **1. 保留站点数据** | 删除面板程序、配置、数据库、日志，**保留** `/var/www` 网站文件 |
+| **2. 彻底删除干净** | 删除面板及 `/var/www` 全部网站文件，**不可恢复** |
+
 ### 命令行卸载（推荐）
 
 ```bash
-zpanel uninstall              # 交互确认，保留配置与网站数据
-zpanel uninstall -y           # 跳过确认
-zpanel uninstall -y --purge   # 同时删除配置、数据库、日志
+zpanel uninstall                    # 交互选择 1 或 2
+zpanel uninstall -y --keep-www      # 保留站点数据
+zpanel uninstall -y --all           # 彻底删除干净
 ```
 
 ### 脚本卸载
 
 ```bash
-bash /usr/local/zpanel/scripts/uninstall.sh
-bash /usr/local/zpanel/scripts/uninstall.sh --yes
-bash /usr/local/zpanel/scripts/uninstall.sh --yes --purge
+bash /usr/local/zpanel/scripts/uninstall.sh              # 交互选择
+bash /usr/local/zpanel/scripts/uninstall.sh --keep-www --yes
+bash /usr/local/zpanel/scripts/uninstall.sh --all --yes   # 需输入 yes 确认（无 -y 时）
 ```
 
-### 从自建源一键卸载
+### 从自建源卸载
 
 ```bash
-wget -qO- https://www.mczybh.cn/zpanel-release/uninstall.sh | sed 's/\r$//' | bash -s -- --yes
+wget -qO uninstall.sh https://www.mczybh.cn/zpanel-release/uninstall.sh
+sed -i 's/\r$//' uninstall.sh
+bash uninstall.sh
 ```
-
-> 默认保留 `/var/www` 网站数据与配置；`--purge` 会删除 `/etc/zpanel`、`/var/lib/zpanel`。
 
 ---
 
