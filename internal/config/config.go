@@ -135,3 +135,15 @@ func (c *Config) SQLitePath() string {
 func (c *Config) ListenAddr() string {
 	return fmt.Sprintf("%s:%d", c.Panel.Bind, c.Panel.Port)
 }
+
+// Save 写入配置文件
+func Save(path string, cfg *Config) error {
+	data, err := yaml.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("marshal config: %w", err)
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(path, data, 0o600)
+}

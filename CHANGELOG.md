@@ -5,6 +5,16 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-04
+
+### Added
+- cobra CLI：`zpanel` / `zp` 命令（对标宝塔 `bt`）
+- 交互式菜单（无参数执行 `zpanel`）
+- 命令：`default` `start/stop/restart/status` `user password` `port set` `lnmp` `site list/delete` `version`
+- `scripts/install.sh` 一键安装（支持 `ZPANEL_INSTALL_LOCAL=1` 本地安装）
+- `scripts/uninstall.sh` 卸载脚本
+- Makefile 交叉编译：`make release-amd64` `release-arm64` `release`
+
 ## [0.4.0] - 2026-07-04
 
 ### Added
@@ -52,7 +62,8 @@
 - 项目 README
 - 版本标记与 Git 备份规范
 
-[Unreleased]: https://github.com/your-org/zpanel/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/your-org/zpanel/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/your-org/zpanel/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/your-org/zpanel/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/your-org/zpanel/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/your-org/zpanel/compare/v0.1.0...v0.2.0

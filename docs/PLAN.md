@@ -281,25 +281,28 @@ chore: release v0.2.0
 | 6 | JWT auth login API | 完成 |
 | 7 | monitor overview API | 完成 |
 
-**v0.4.0 已达成。** LNMP + 站点管理可用（需 Linux）。下一步 **v0.5.0**：CLI + install.sh。
+**v0.5.0 已达成。** 支持 CLI + install.sh 一键安装。下一步 **v1.0.0**：MVP 联调发布。
 
-### Phase C — LNMP 与站点（v0.4.0，已完成）
-
-| # | 任务 | 状态 |
-|---|------|------|
-| 1 | `scripts/lnmp-install.sh` | 完成 |
-| 2 | LNMP 状态 / 安装 API | 完成 |
-| 3 | 站点 CRUD（HTML/PHP/Go） | 完成 |
-| 4 | 前端环境页 + 站点页 | 完成 |
-
-### Phase D — CLI 与部署（v0.5.0，下一步）
+### Phase D — CLI 与部署（v0.5.0，已完成）
 
 | # | 任务 | 状态 |
 |---|------|------|
-| 1 | cobra CLI 框架 | **下一步** |
-| 2 | 交互式菜单 `zpanel` | 待开始 |
-| 3 | `scripts/install.sh` | 待开始 |
-| 4 | 交叉编译 amd64 + arm64 | 待开始 |
+| 1 | cobra CLI 框架 | 完成 |
+| 2 | 交互式菜单 | 完成 |
+| 3 | start/stop/restart/status | 完成 |
+| 4 | user password / port set | 完成 |
+| 5 | lnmp status/install | 完成 |
+| 6 | site list/delete | 完成 |
+| 7 | install.sh + uninstall.sh | 完成 |
+| 8 | 交叉编译 Makefile | 完成 |
+
+### Phase E — MVP 联调（v1.0.0，下一步）
+
+| # | 任务 | 状态 |
+|---|------|------|
+| 1 | Ubuntu 22.04 端到端测试 | **下一步** |
+| 2 | 安全加固 | 待开始 |
+| 3 | README 完善 | 待开始 |
 
 **启动命令（开发环境）：**
 ```bash

@@ -16,6 +16,19 @@
 curl -sSL https://get.zpanel.io/install.sh | bash
 ```
 
+当前版本：**v0.5.0**（见 [VERSION](VERSION)）
+
+## 一键安装（Linux）
+
+```bash
+# 从发布包安装
+curl -sSL https://get.zpanel.io/install.sh | bash
+
+# 本地开发安装
+make build-all
+ZPANEL_INSTALL_LOCAL=1 sudo bash scripts/install.sh
+```
+
 ## 管理命令
 
 ```bash
