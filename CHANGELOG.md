@@ -6,9 +6,11 @@
 ## [Unreleased]
 
 ### Added
-- 开发计划 `docs/PLAN.md`（里程碑 v0.2.0 ~ v1.0.0）
-- Agent Skill `.cursor/skills/zpanel-dev/`
-- 本地开发配置示例 `configs/config.example.yaml`
+- Go 项目目录结构（`cmd/` `internal/` `templates/` `web/`）
+- `go.mod` 模块 `github.com/zex/zpanel`
+- 统一 API 响应模型 `internal/model/response.go`
+- Nginx / systemd 配置模板占位
+- Makefile 构建入口
 
 ---
 

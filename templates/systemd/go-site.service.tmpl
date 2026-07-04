@@ -1,0 +1,15 @@
+[Unit]
+Description=Zpanel Go site {{ .Name }}
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory={{ .Root }}
+ExecStart={{ .Binary }}
+Restart=on-failure
+RestartSec=5
+Environment=PORT={{ .GoPort }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+server {
+    listen 80;
+    server_name {{ range .Domains }}{{ . }} {{ end }};
+    root {{ .Root }};
+    index index.html index.htm;
+
+    access_log /var/log/nginx/{{ .Name }}_access.log;
+    error_log  /var/log/nginx/{{ .Name }}_error.log;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\.(ht|git|env) {
+        deny all;
+    }
+}

@@ -273,8 +273,8 @@ chore: release v0.2.0
 
 | # | 任务 | 状态 |
 |---|------|------|
-| 1 | `go mod init`，创建目录结构 | 待开始 |
-| 2 | `cmd/zpanel/main.go` server/cli 入口 | 待开始 |
+| 1 | `go mod init`，创建目录结构 | 完成 |
+| 2 | `cmd/zpanel/main.go` server/cli 入口 | **下一步** |
 | 3 | Gin HTTP + `/api/v1/health` | 待开始 |
 | 4 | config 读取 `configs/config.example.yaml` | 待开始 |
 | 5 | SQLite 初始化 + 用户表 | 待开始 |

@@ -40,6 +40,7 @@ configs/config.yaml
 
 # 运行时数据
 /var/
+/data/
 *.db
 *.sqlite
 *.sqlite3
